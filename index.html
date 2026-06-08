@@ -84,12 +84,15 @@
         <button class="btn-more" id="btn-more-toggle">
           메뉴 <i class="fa-solid fa-chevron-down"></i>
         </button>
-        <div class="more-dropdown" id="more-dropdown">
+<div class="more-dropdown" id="more-dropdown">
           <button class="dropdown-item" onclick="openPage('notice')">
             <i class="fa-solid fa-bullhorn"></i> 공지사항
           </button>
           <button class="dropdown-item" onclick="openPage('event')">
             <i class="fa-solid fa-gift"></i> 이벤트
+          </button>
+          <button class="dropdown-item" onclick="window.open('event_notice.html', '_blank')">
+            <i class="fa-solid fa-star"></i> 후기 이벤트
           </button>
           <button class="dropdown-item" onclick="openPage('piggy')">
             <i class="fa-solid fa-chart-line"></i> 나의 수자원 절약 기록
