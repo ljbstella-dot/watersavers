@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>후기 이벤트 — 워터세이버즈</title>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:        #f4f6f9;
+      --card:      #ffffff;
+      --primary:   #007b5e;
+      --primary-bg:rgba(0,123,94,0.08);
+      --accent:    #e74c3c;
+      --text:      #2c3e50;
+      --text-sub:  #7f8c8d;
+      --border:    #e2e8f0;
+      --shadow:    0 4px 16px rgba(0,0,0,0.08);
+      --radius:    14px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 2rem 1rem 4rem;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    /* 헤더 */
+    .page-header { text-align: center; margin-bottom: 2.5rem; }
+    .page-header h1 {
+      font-family: 'Gowun Batang', serif;
+      font-size: 2rem; color: var(--primary);
+      margin-bottom: 0.4rem;
+    }
+    .page-header p { color: var(--text-sub); font-size: 0.9rem; }
+
+    /* 섹션 카드 */
+    .section {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 1.8rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+    }
+    .section-title {
+      font-family: 'Gowun Batang', serif;
+      font-size: 1.2rem; font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.7rem;
+      border-bottom: 2px solid var(--border);
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .section-desc {
+      font-size: 0.85rem; color: var(--text-sub);
+      margin-bottom: 1rem; line-height: 1.7;
+    }
+
+    /* 그리드 */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+    }
+    .grid-lg  { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+    .grid-xl  { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+
+    /* 이미지 래퍼 */
+    .img-wrapper {
+      position: relative;
+      overflow: hidden;
+      border-radius: 10px;
+      aspect-ratio: 3/4;
+      background: #eee;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .img-wrapper:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.14); }
+    .img-wrapper.landscape { aspect-ratio: 16/9; }
+    .img-wrapper.square    { aspect-ratio: 1/1;  }
+    .img-wrapper img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s;
+    }
+    .img-wrapper:hover img { transform: scale(1.04); }
+
+    /* 히든 피스 */
+    .hidden-piece { cursor: pointer; }
+    .hidden-piece img {
+      filter: blur(16px) brightness(0.4);
+      transition: filter 0.5s ease;
+    }
+    .hidden-piece.revealed img { filter: none; }
+    .hidden-piece::after {
+      content: '🔒 클릭하여 공개';
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.65);
+      color: #fff; font-size: 0.78rem; font-weight: 600;
+      padding: 6px 14px; border-radius: 20px;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      white-space: nowrap;
+    }
+    .hidden-piece.revealed::after { opacity: 0; }
+
+    /* 히든 배지 */
+    .hidden-badge {
+      text-align: center;
+      font-size: 0.82rem; color: var(--accent);
+      font-weight: 600; margin-bottom: 1rem;
+    }
+
+    /* 푸터 */
+    .footer {
+      text-align: center; color: var(--text-sub);
+      font-size: 0.8rem; margin-top: 2rem;
+    }
+
+    @media(max-width: 600px) {
+      .grid    { grid-template-columns: repeat(2, 1fr); }
+      .grid-lg { grid-template-columns: repeat(1, 1fr); }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="page-header">
+    <h1>🎁 후기 이벤트</h1>
+    <p>급식 출석 체크 이벤트 — 팀 워터세이버즈 💧</p>
+  </div>
+
+  <!-- 포스터 -->
+  <div class="section">
+    <div class="section-title">📌 이벤트 포스터</div>
+    <p class="section-desc">기간: 6/5 ~ 6/15 (총 16일간 진행)</p>
+    <div class="grid grid-lg" id="poster-container"></div>
+  </div>
+
+  <!-- 희귀 엽서 히든 피스 -->
+  <div class="section">
+    <div class="section-title">✨ 희귀 엽서 — Hidden Piece</div>
+    <p class="hidden-badge">※ 이미지를 클릭하면 블러가 해제됩니다. 1등에게만 증정됩니다.</p>
+    <div class="grid grid-xl" id="hidden-container"></div>
+  </div>
+
+  <!-- 일반 엽서 -->
+  <div class="section">
+    <div class="section-title">💌 엽서 (총 28종)</div>
+    <p class="section-desc">후기 작성 시 당첨된 50명에게 책갈피와 함께 증정. 모두 다른 종류 — 먼저 선택하는 사람이 임자!</p>
+    <div class="grid" id="postcard-container"></div>
+  </div>
+
+  <!-- 모바일 배경화면 -->
+  <div class="section">
+    <div class="section-title">📱 모바일 배경화면 (19종)</div>
+    <p class="section-desc">1등에게는 희귀 엽서 1장과 모바일·PC 배경화면까지 증정!</p>
+    <div class="grid" id="mobile-container"></div>
+  </div>
+
+  <!-- PC 배경화면 -->
+  <div class="section">
+    <div class="section-title">🖥️ PC 배경화면 (12종)</div>
+    <div class="grid" id="pc-container"></div>
+  </div>
+
+  <!-- 책갈피 -->
+  <div class="section">
+    <div class="section-title">🔖 책갈피 (8종)</div>
+    <p class="section-desc">정성껏 후기를 써 주신 50명께 이벤트 상품 외 특별 책갈피 증정!</p>
+    <div class="grid" id="bookmark-container"></div>
+  </div>
+
+  <div class="footer">팀 워터세이버즈 드림 💧 — watersavers</div>
+</div>
+
+<script>
+  function createImages(containerId, count, prefix, isHidden, isLandscape, isSquare) {
+    const container = document.getElementById(containerId);
+    for (let i = 0; i < count; i++) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'img-wrapper';
+      if (isLandscape) wrapper.classList.add('landscape');
+      if (isSquare)    wrapper.classList.add('square');
+      if (isHidden)    wrapper.classList.add('hidden-piece');
+
+      const img = document.createElement('img');
+      img.src     = `images/${prefix}${i}.jpg`;
+      img.alt     = `${prefix} ${i}`;
+      img.loading = 'lazy';
+      wrapper.appendChild(img);
+
+      if (isHidden) {
+        wrapper.addEventListener('click', function () {
+          this.classList.toggle('revealed');
+        });
+      }
+      container.appendChild(wrapper);
+    }
+  }
+
+  createImages('poster-container',   3,  'poster',    false, false, false);
+  createImages('hidden-container',   4,  'hidden',    true,  false, false);
+  createImages('postcard-container', 28, 'postcard',  false, false, false);
+  createImages('mobile-container',   19, 'mobile',    false, false, false);
+  createImages('pc-container',       12, 'pc',        false, true,  false);
+  createImages('bookmark-container', 8,  'bookmark',  false, false, false);
+</script>
+</body>
+</html>
